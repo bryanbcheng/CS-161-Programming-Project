@@ -1,0 +1,19 @@
+#!/bin/sh
+
+#Compile and clean
+make clean
+make
+
+#Run the code
+java MyParser ./items-*
+
+#Eliminate duplicates
+sort items.dat | uniq - items_uniq.dat
+sort users.dat | uniq - users_uniq.dat
+sort categories.dat | uniq - categories_uniq.dat
+sort bids.dat | uniq - bids_uniq.dat
+
+#Update the database
+./sqlite3 project.db < drop.sql
+./sqlite3 project.db < create.sql
+./sqlite3 project.db < load.txt
