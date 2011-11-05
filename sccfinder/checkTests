@@ -1,0 +1,27 @@
+#!/bin/sh
+
+#Compile and clean
+make clean
+make
+
+#Run the code
+./sccfinder ../test/input/network1.txt ../test/output/my_network1_output.txt
+diff ../test/correctoutput/network1_output.txt ../test/output/my_network1_output.txt
+./sccfinder ../test/input/network2.txt ../test/output/my_network2_output.txt
+diff ../test/correctoutput/network2_output.txt ../test/output/my_network2_output.txt
+./sccfinder ../test/input/network3.txt ../test/output/my_network3_output.txt
+diff ../test/correctoutput/network3_output.txt ../test/output/my_network3_output.txt
+./sccfinder ../test/input/network4.txt ../test/output/my_network4_output.txt
+diff ../test/correctoutput/network4_output.txt ../test/output/my_network4_output.txt
+./sccfinder ../test/input/network5.txt ../test/output/my_network5_output.txt
+diff ../test/correctoutput/network5_output.txt ../test/output/my_network5_output.txt
+./sccfinder ../test/input/network6.txt ../test/output/my_network6_output.txt
+diff ../test/correctoutput/network6_output.txt ../test/output/my_network6_output.txt
+./sccfinder ../test/input/network7.txt ../test/output/my_network7_output.txt
+diff ../test/correctoutput/network7_output.txt ../test/output/my_network7_output.txt
+./sccfinder ../test/input/network8.txt ../test/output/my_network8_output.txt
+diff ../test/correctoutput/network8_output.txt ../test/output/my_network8_output.txt
+./sccfinder ../test/input/network9.txt ../test/output/my_network9_output.txt
+diff ../test/correctoutput/network9_output.txt ../test/output/my_network9_output.txt
+./sccfinder ../test/input/network10.txt ../test/output/my_network10_output.txt
+diff ../test/correctoutput/network10_output.txt ../test/output/my_network10_output.txt
