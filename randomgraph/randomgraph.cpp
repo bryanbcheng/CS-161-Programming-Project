@@ -26,10 +26,12 @@ set<edge> generateGraph(edge* edges, int num_nodes, int num_edges)
 	for (int i = 0; i < num_edges; i++) {
 		edges[i].start = rand() % num_nodes + 1;
 		edges[i].end = rand() % num_nodes + 1;
+		int size = set.size();
 		
 		if (edges[i].start == edges[i].end) i--;
 		else {
-            set.insert(edges[i]);
+			set.insert(edges[i]);
+			if (set.size() == size) i--;
             //cout << "added: " << edges[i].start << " " << edges[i].end << "\n";
         }
 	}
