@@ -10,20 +10,31 @@ using namespace std;
 struct edge {
 	int start;
 	int end;
-};
+    bool operator<(const edge &e) const
+    { 
+        if (start <= e.start && end <= e.end) {
+            return false;
+        }
+        return true;
+    }
 
-edge* generateGraph(edge* edges, int num_nodes, int num_edges)
+} ;
+
+set<edge> generateGraph(edge* edges, int num_nodes, int num_edges)
 {
+    set<edge> set;
 	for (int i = 0; i < num_edges; i++) {
 		edges[i].start = rand() % num_nodes + 1;
 		edges[i].end = rand() % num_nodes + 1;
 		
 		if (edges[i].start == edges[i].end) i--;
-		
-		// with set else adds it to set and check if true or not
+		else {
+            set.insert(edges[i]);
+            //cout << "added: " << edges[i].start << " " << edges[i].end << "\n";
+        }
 	}
 	
-	return edges;
+	return set;
 }
 
 int main(int argc, char* argv[])
@@ -36,19 +47,22 @@ int main(int argc, char* argv[])
     char* outputFile = argv[3];
 
 	edge edges[num_edges];
-	generateGraph(edges, num_nodes, num_edges);
+    set<edge> edgeSet = generateGraph(edges, num_nodes, num_edges);
 	
-	// MAY NEED TO SORT CORRECTLY
+	// MAY NEED TO SORT CORRECTLY //
 	
     // Output the generated random graph into a file.
     std::ofstream os;
     os.open(outputFile);
     os << argv[1] << "\n" << argv[2] << "\n";
+    
+    //cout << edgeSet.size() << "\n";
 	
-	// NEED TO CHANGE THIS TO USE ITERATOR WITH A SET
-	for (int i = 0; i < num_edges; i++) {
-		os << edges[i].start << " " << edges[i].end << "\n";
-	}
+    for (set<edge>::iterator iter = edgeSet.begin(); iter != edgeSet.end(); ++iter) {
+        edge e = *iter;
+        os << e.start << " " << e.end << "\n";
+        //cout << "iter\n";
+    }
 	
     os.close();
     return 0;
