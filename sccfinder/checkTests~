@@ -4,7 +4,7 @@
 make clean
 make
 
-#START=$(date +%s%N)
+START=$(date +%s%N)
 
 #Run the code
 ./sccfinder ../test/input/network1.txt ../test/output/my_network1_output.txt
@@ -28,6 +28,6 @@ diff ../test/correctoutput/network9_output.txt ../test/output/my_network9_output
 ./sccfinder ../test/input/network10.txt ../test/output/my_network10_output.txt
 diff ../test/correctoutput/network10_output.txt ../test/output/my_network10_output.txt
 
-#END=$(date +%s%N)
-#DIFF=$(( $END - $START ))
-#echo "It took $DIFF seconds"
+END=$(date +%s%N)
+DIFF=$(( $END - $START ))
+echo "It took $DIFF seconds"
