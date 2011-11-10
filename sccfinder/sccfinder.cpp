@@ -157,7 +157,7 @@ void dfsSubroutineLeader(Node* nodes, Edge** edgesfw, int num_nodes, int* new_no
 }
 
 /*
-void assignLeader2(Node* nodes, Node* node, Edge** edges, Edge* edge, int* count)
+void assignLeader(Node* nodes, Node* node, Edge** edges, Edge* edge, int* count)
 {
 	if (!node->explored) return; // all explores and finishes are set to true from previous dfs loop
 	
@@ -196,12 +196,12 @@ void assignLeader2(Node* nodes, Node* node, Edge** edges, Edge* edge, int* count
 	}
 }
 
-void dfsSubroutineLeader2(Node* nodes, Edge** edgesfw, int num_nodes, int* new_nodes, priority_queue<int>& leaders)
+void dfsSubroutineLeader(Node* nodes, Edge** edgesfw, int num_nodes, int* new_nodes, priority_queue<int>& leaders)
 {
 	for (int i = num_nodes - 1; i >= 0; i--) {
 		int count = 0;
 		
-		assignLeader2(nodes, &nodes[new_nodes[i] - 1], edgesfw, edgesfw[new_nodes[i]], &count);
+		assignLeader(nodes, &nodes[new_nodes[i] - 1], edgesfw, edgesfw[new_nodes[i]], &count);
 		
 		if (count >= 1) {
 			leaders.push(count);
@@ -209,7 +209,6 @@ void dfsSubroutineLeader2(Node* nodes, Edge** edgesfw, int num_nodes, int* new_n
 	}
 }
 */
-
 /**
  * Given an input file (inputFile) and an integer array (out) of size 5, fills
  * the 5 largest SCC sizes into (out) in decreasing order. In the case where
@@ -232,7 +231,7 @@ void findSccs(char* inputFile, int out[5])
 	is >> num_nodes;
 	is >> num_edges;
 	
-	Node nodes[num_nodes];
+	Node* nodes = new Node[num_nodes];
 	Edge** edgesfw = new Edge*[num_nodes + 1]();
 	Edge** edgesbk = new Edge*[num_nodes + 1]();
 	

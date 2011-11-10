@@ -2,14 +2,16 @@
 
 #Run the code
 
-nodes=5
-edges=10 
+nodes=10000
+edges=125000
 
 for i in {0..99}
 do
 
 ./randomgraph $nodes $edges graph/graph$i.txt
 ../sccfinder/sccfinder graph/graph$i.txt output/output$i.txt
+
+#sleep 1
 
 done
 
