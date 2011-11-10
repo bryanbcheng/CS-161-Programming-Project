@@ -20,17 +20,21 @@ struct edge {
 
 } ;
 
-set<edge> generateGraph(edge* edges, int num_nodes, int num_edges)
+set<edge> generateGraph(int num_nodes, int num_edges)
 {
     set<edge> set;
 	for (int i = 0; i < num_edges; i++) {
-		edges[i].start = rand() % num_nodes + 1;
-		edges[i].end = rand() % num_nodes + 1;
+		edge e = {};
+		e.start = rand() % num_nodes + 1;
+		e.end = rand() % num_nodes + 1;
+		
+		//edges[i].start = rand() % num_nodes + 1;
+		//edges[i].end = rand() % num_nodes + 1;
 		int size = set.size();
 		
-		if (edges[i].start == edges[i].end) i--;
+		if (e.start == e.end) i--;
 		else {
-			set.insert(edges[i]);
+			set.insert(e);
 			if (set.size() == size) i--;
             //cout << "added: " << edges[i].start << " " << edges[i].end << "\n";
         }
@@ -56,8 +60,8 @@ int main(int argc, char* argv[])
 	int num_edges = atoi(argv[2]);
     char* outputFile = argv[3];
 
-	edge edges[num_edges];
-    set<edge> edgeSet = generateGraph(edges, num_nodes, num_edges);
+	//edge edges[num_edges];
+    set<edge> edgeSet = generateGraph(num_nodes, num_edges);
 	
 	// MAY NEED TO SORT CORRECTLY //
 	

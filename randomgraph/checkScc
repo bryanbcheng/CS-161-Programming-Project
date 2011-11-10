@@ -3,7 +3,7 @@
 #Run the code
 
 nodes=100000
-edges=1140000
+edges=1200000
 
 for i in {0..49}
 do
@@ -12,6 +12,7 @@ do
 ../sccfinder/sccfinder graph/graph$i.txt output/output$i.txt
 
 #sleep 1
+echo $i
 
 done
 

@@ -128,6 +128,7 @@ void dfsSubroutineFinishingTime(Node* nodes, Edge** edgesbk, int num_nodes, int*
 	}
 }
 
+/*
 void assignLeader(Node* nodes, Node* node, Edge** edges, Edge* edge, int* count)
 {
 	if (!node->explored) return; // all explores are set to true from previous dfs loop
@@ -155,8 +156,8 @@ void dfsSubroutineLeader(Node* nodes, Edge** edgesfw, int num_nodes, int* new_no
 		}
 	}
 }
+*/
 
-/*
 void assignLeader(Node* nodes, Node* node, Edge** edges, Edge* edge, int* count)
 {
 	if (!node->explored) return; // all explores and finishes are set to true from previous dfs loop
@@ -208,7 +209,7 @@ void dfsSubroutineLeader(Node* nodes, Edge** edgesfw, int num_nodes, int* new_no
 		}
 	}
 }
-*/
+
 /**
  * Given an input file (inputFile) and an integer array (out) of size 5, fills
  * the 5 largest SCC sizes into (out) in decreasing order. In the case where
@@ -252,10 +253,20 @@ void findSccs(char* inputFile, int out[5])
     out[4] = 0;
 	
 	int size = scc_leaders.size();
+	int num_isolated = 0;
 	for (int i = 0; i < 5 && i < size; i++) {
 		out[i] = scc_leaders.top();
+		if (out[i] == 1) num_isolated++;
 		scc_leaders.pop();
 	}
+	
+	while (!scc_leaders.empty()) {
+		int o = scc_leaders.top();
+		if (o == 1) num_isolated++;
+		scc_leaders.pop();
+	}
+	
+	cout << "NUMBER ISOLATED: " << num_isolated << endl;
 }
 
 /*
