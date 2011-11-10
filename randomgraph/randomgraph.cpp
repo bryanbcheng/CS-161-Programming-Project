@@ -44,6 +44,14 @@ int main(int argc, char* argv[])
     /* initialize random seed: */
 	srand ( time(NULL) );
 	
+	/*
+	int milisec = 1000; // length of time to sleep, in miliseconds
+	struct timespec req = {0};
+	req.tv_sec = 0;
+	req.tv_nsec = milisec * 1000000L;
+	nanosleep(&req, (struct timespec *)NULL);
+	*/
+	
 	int num_nodes = atoi(argv[1]);
 	int num_edges = atoi(argv[2]);
     char* outputFile = argv[3];

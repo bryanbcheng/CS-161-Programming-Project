@@ -1,9 +1,16 @@
 #!/bin/sh
 
-#Compile and clean
-make clean
-make
-
 #Run the code
-./randomgraph 100 1000 randomGraph.txt
-../sccfinder/sccfinder randomGraph.txt output.txt
+
+nodes=5
+edges=10 
+
+for i in {0..99}
+do
+
+./randomgraph $nodes $edges graph/graph$i.txt
+../sccfinder/sccfinder graph/graph$i.txt output/output$i.txt
+
+done
+
+../processoutput/processoutput $nodes

@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <stack>
+#include <queue>
 
 using namespace std;
 
@@ -18,19 +19,7 @@ struct Edge {
 	Edge* next_edge;
 };
 
-struct Node_edge {
-	Node* n;
-	Edge* e;
-};
-
-struct Scc {
-	int leader;
-	int components;
-};
-
-bool sccComp (Scc i, Scc j) { return (i.components > j.components); }
-
-void hashEdge(map<int, Edge*>& edges, int start, int end)
+void hashEdge(Edge** edges, int start, int end)
 {
 	// look up current
 	Edge *new_edge = new Edge();
@@ -41,7 +30,7 @@ void hashEdge(map<int, Edge*>& edges, int start, int end)
 	edges[start] = new_edge;
 }
 
-void getNodesAndEdges(ifstream& is, Node* nodes, map<int, Edge*>& edgesfw, map<int, Edge*>& edgesbk, int num_nodes, int num_edges)
+void getNodesAndEdges(ifstream& is, Node* nodes, Edge** edgesfw, Edge** edgesbk, int num_nodes, int num_edges)
 {
 	for (int i = 0; i < num_nodes; i++) {
 		nodes[i].vertex = i + 1; // vertexs start from 1 and go to n
@@ -60,7 +49,8 @@ void getNodesAndEdges(ifstream& is, Node* nodes, map<int, Edge*>& edgesfw, map<i
 	}
 }
 
-void exploreNode(Node* nodes, Node* node, map<int, Edge*>& edges, Edge* edge, int* new_nodes, int* count)
+/*
+void exploreNode(Node* nodes, Node* node, Edge** edges, Edge* edge, int* new_nodes, int* count)
 {
 	if (node->explored) return;
 	
@@ -76,7 +66,7 @@ void exploreNode(Node* nodes, Node* node, map<int, Edge*>& edges, Edge* edge, in
 	(*count)++;
 }
 
-void dfsSubroutineFinishingTime(Node* nodes, map<int, Edge*>& edgesbk, int num_nodes, int* new_nodes)
+void dfsSubroutineFinishingTime(Node* nodes, Edges** edgesbk, int num_nodes, int* new_nodes)
 {
 	int count = 0;
 	
@@ -85,53 +75,9 @@ void dfsSubroutineFinishingTime(Node* nodes, map<int, Edge*>& edgesbk, int num_n
 		exploreNode(nodes, &nodes[i], edgesbk, edgesbk[nodes[i].vertex], new_nodes, &count);		
 	}
 }
+*/
 
-void exploreNode2(Node* nodes, Node* node, map<int, Edge*>& edges, Edge* edge, int* new_nodes, int* count)
-{
-	if (node->explored) return;
-	
-	stack<Node_edge> s;
-	
-	Node_edge ne = {node, edge};
-	s.push(ne);
-	
-	while (!s.empty()) {
-		Node_edge top = s.top();
-		
-		if (top.n->explored) {
-			s.pop();
-			
-			if (s.size() == 0) break;
-			
-			top = s.top();
-			top.e = top.e->next_edge;
-			s.top() = top;
-			
-			if (top.e != NULL) {
-				Node* n = &nodes[top.e->end - 1];
-				Edge* e = edges[n->vertex];
-				Node_edge next = {n, e};
-				s.push(next);
-			} else {
-				top.n->explored = true;
-				new_nodes[*count] = top.n->vertex;
-				(*count)++;
-			}
-		} else if (top.e == NULL) {
-			top.n->explored = true;
-			new_nodes[*count] = top.n->vertex;
-			(*count)++;
-		} else {
-			top.n->explored = true;
-			Node* n = &nodes[top.e->end - 1];
-			Edge* e = edges[n->vertex];
-			Node_edge next = {n, e};
-			s.push(next);
-		}
-	}
-}
-
-void exploreNode3(Node* nodes, Node* node, map<int, Edge*>& edges, Edge* edge, int* new_nodes, int* count)
+void exploreNode(Node* nodes, Node* node, Edge** edges, Edge* edge, int* new_nodes, int* count)
 {
 	if (node->explored) return;
 	
@@ -172,17 +118,17 @@ void exploreNode3(Node* nodes, Node* node, map<int, Edge*>& edges, Edge* edge, i
 	}
 }
 
-void dfsSubroutineFinishingTime2(Node* nodes, map<int, Edge*>& edgesbk, int num_nodes, int* new_nodes)
+void dfsSubroutineFinishingTime(Node* nodes, Edge** edgesbk, int num_nodes, int* new_nodes)
 {
 	int count = 0;
 	
 	// Count down from n-1 to 0
 	for (int i = num_nodes - 1; i >= 0; i--) {
-		exploreNode3(nodes, &nodes[i], edgesbk, edgesbk[nodes[i].vertex], new_nodes, &count);		
+		exploreNode(nodes, &nodes[i], edgesbk, edgesbk[nodes[i].vertex], new_nodes, &count);		
 	}
 }
 
-void assignLeader(Node* nodes, Node* node, map<int, Edge*>& edges, Edge* edge, int* count)
+void assignLeader(Node* nodes, Node* node, Edge** edges, Edge* edge, int* count)
 {
 	if (!node->explored) return; // all explores are set to true from previous dfs loop
 	
@@ -197,7 +143,7 @@ void assignLeader(Node* nodes, Node* node, map<int, Edge*>& edges, Edge* edge, i
 	(*count)++;
 }
 
-void dfsSubroutineLeader(Node* nodes, map<int, Edge*>& edgesfw, int num_nodes, int* new_nodes, vector<Scc>& leaders)
+void dfsSubroutineLeader(Node* nodes, Edge** edgesfw, int num_nodes, int* new_nodes, priority_queue<int>& leaders)
 {
 	for (int i = num_nodes - 1; i >= 0; i--) {
 		int count = 0;
@@ -205,12 +151,64 @@ void dfsSubroutineLeader(Node* nodes, map<int, Edge*>& edgesfw, int num_nodes, i
 		assignLeader(nodes, &nodes[new_nodes[i] - 1], edgesfw, edgesfw[new_nodes[i]], &count);
 		
 		if (count >= 1) {
-			Scc s = {new_nodes[i], count};
-			
-			leaders.push_back(s);
+			leaders.push(count);
 		}
 	}
 }
+
+/*
+void assignLeader2(Node* nodes, Node* node, Edge** edges, Edge* edge, int* count)
+{
+	if (!node->explored) return; // all explores and finishes are set to true from previous dfs loop
+	
+	stack<Node*> s;
+	s.push(node);
+	
+	while (!s.empty()) {
+		Node* top = s.top();
+		
+		// If node already explored
+		if (!top->explored && !top->finished) {
+			s.pop();
+			continue;
+		}
+		
+		// set explore node true
+		top->explored = false;
+		Edge* e = edges[top->vertex];
+		if (e == NULL) {
+			// No edges, leaf node or explored, but not finished
+			top->finished = false;
+			(*count)++;
+			s.pop();
+		} else {		
+			vector<Node *> next_nodes;
+			while (e != NULL) {
+				// add edge to stack if end node has not been explored
+				Node *next = &nodes[e->end - 1];
+				if (next->explored) { // or ! (!next->explored)
+					s.push(next);
+				}
+				e = e->next_edge;
+			}
+			edges[top->vertex] = NULL;
+		}
+	}
+}
+
+void dfsSubroutineLeader2(Node* nodes, Edge** edgesfw, int num_nodes, int* new_nodes, priority_queue<int>& leaders)
+{
+	for (int i = num_nodes - 1; i >= 0; i--) {
+		int count = 0;
+		
+		assignLeader2(nodes, &nodes[new_nodes[i] - 1], edgesfw, edgesfw[new_nodes[i]], &count);
+		
+		if (count >= 1) {
+			leaders.push(count);
+		}
+	}
+}
+*/
 
 /**
  * Given an input file (inputFile) and an integer array (out) of size 5, fills
@@ -235,21 +233,18 @@ void findSccs(char* inputFile, int out[5])
 	is >> num_edges;
 	
 	Node nodes[num_nodes];
-	map<int, Edge*> edgesfw;
-	map<int, Edge*> edgesbk;
+	Edge** edgesfw = new Edge*[num_nodes + 1]();
+	Edge** edgesbk = new Edge*[num_nodes + 1]();
 	
 	getNodesAndEdges(is, nodes, edgesfw, edgesbk, num_nodes, num_edges);
 	
 	// implement algorithm to find SCCs
 	int new_nodes[num_nodes];
-	dfsSubroutineFinishingTime2(nodes, edgesbk, num_nodes, new_nodes);
+	dfsSubroutineFinishingTime(nodes, edgesbk, num_nodes, new_nodes);
 	
 	// dfs subroutine forwards to find leaders
-	vector<Scc> scc_leaders;
+	priority_queue<int> scc_leaders;
 	dfsSubroutineLeader(nodes, edgesfw, num_nodes, new_nodes, scc_leaders);
-	
-	// sort leaders vector
-	sort(scc_leaders.begin(), scc_leaders.end(), sccComp);
 	
 	out[0] = 0;
     out[1] = 0;
@@ -257,9 +252,11 @@ void findSccs(char* inputFile, int out[5])
     out[3] = 0;
     out[4] = 0;
 	
-	for (int i = 0; i < 5; i++) {
-		out[i] = scc_leaders[i].components;
-	}   
+	int size = scc_leaders.size();
+	for (int i = 0; i < 5 && i < size; i++) {
+		out[i] = scc_leaders.top();
+		scc_leaders.pop();
+	}
 }
 
 /*
